@@ -7,9 +7,14 @@ import {ArrowLeft} from "@iconoir/vue";
 import {toTypedSchema} from "@vee-validate/zod";
 import * as z from "zod";
 import {useForm} from "vee-validate";
+import {useHead} from "#imports";
 
 definePageMeta({
   layout: 'auth',
+});
+
+useHead({
+  title: 'TickTack · Registration'
 });
 
 const schema = toTypedSchema(z.object({

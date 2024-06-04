@@ -4,9 +4,14 @@ import {FormControl, FormField, FormItem, FormLabel} from "~/components/ui/form"
 import {Input} from "~/components/ui/input";
 import {Button} from "~/components/ui/button";
 import {ArrowLeft} from "@iconoir/vue";
+import {useHead} from "#imports";
 
 definePageMeta({
   layout: 'auth',
+});
+
+useHead({
+  title: 'TickTack · Connection'
 });
 </script>
 
