@@ -1,7 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  modules: ["@nuxtjs/tailwindcss", "@nuxtjs/color-mode"],
+  modules: ["@nuxtjs/tailwindcss", "@nuxtjs/color-mode", "shadcn-nuxt"],
   app: {
     head: {
       meta: [
@@ -38,5 +38,9 @@ export default defineNuxtConfig({
   },
   colorMode: {
     classSuffix: ''
+  },
+  shadcn: {
+    prefix: '',
+    componentDir: './components/ui'
   }
 })
