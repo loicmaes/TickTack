@@ -1,11 +1,11 @@
 import {IUser} from "~/types/IUser";
 import {useRuntimeConfig} from "#imports";
-import jwt from "jsonwebtoken";
+import {v4 as uuidv4} from "uuid";
 import {createSession, findSessionByAuthToken} from "~/server/database/repositories/session.repository";
 
 export async function makeSession (user: IUser, event: any): Promise<IUser | undefined> {
   const { jwtSecret } = useRuntimeConfig();
-  const authToken = jwt.sign({ userUid: user.uid }, jwtSecret, { expiresIn: '10h' });
+  const authToken = uuidv4();
   const session = await createSession({ userUid: user.uid, authToken });
   const userUid = session.userUid;
 
