@@ -12,7 +12,7 @@ module.exports = {
   prefix: "",
   theme: {
     fontFamily: {
-      'montserrat': 'Montserrat, Helvetica, Arial, sans-serif',
+      'poppins': 'Poppins, Helvetica, Arial, sans-serif',
     },
     container: {
       center: true,
