@@ -23,13 +23,14 @@ model User {
 
 model Session {
   id        Int       @id @default(autoincrement())
-  userUid   String    @unique
-  authToken String    @unique
+  userUid   String
+  authToken String
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
   user User @relation(fields: [userUid], references: [uid])
 
+  @@unique([userUid, authToken])
   @@map("sessions")
 }
