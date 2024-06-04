@@ -26,3 +26,4 @@ logs
 # Databse
 server/database/migrations/*
 server/database/*.db
+server/database/*.db-journal
