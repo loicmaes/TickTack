@@ -1,5 +1,14 @@
 <script setup lang="ts">
 import {IconoirProvider} from "@iconoir/vue";
+import {type IUser} from "~/types/IUser";
+import {useUser} from "~/composables/useAuth";
+
+const nuxtApp = useNuxtApp();
+nuxtApp.hook("page:finish", () => {
+  window.scrollTo(0, 0);
+})
+
+const user: IUser = await useUser();
 </script>
 
 <template>
