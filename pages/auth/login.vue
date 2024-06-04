@@ -8,6 +8,7 @@ import {useHead} from "#imports";
 
 definePageMeta({
   layout: 'auth',
+  middleware: 'is-not-authenticated'
 });
 
 useHead({
