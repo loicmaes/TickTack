@@ -4,10 +4,25 @@ import {Input} from "~/components/ui/input";
 import {Button} from "~/components/ui/button";
 import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "~/components/ui/card";
 import {ArrowLeft} from "@iconoir/vue";
+import {toTypedSchema} from "@vee-validate/zod";
+import * as z from "zod";
+import {useForm} from "vee-validate";
 
 definePageMeta({
   layout: 'auth',
 });
+
+const schema = toTypedSchema(z.object({
+  firstName: z.string().min(1),
+  lastName: z.string().min(1),
+  email: z.string().email().min(1),
+  password: z.string().regex(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/).min(1)
+}));
+const { handleSubmit } = useForm({
+  validationSchema: schema,
+});
+
+const onSubmit = handleSubmit(async ({ firstName, lastName, email, password }) => await registerWithEmail(firstName, lastName, email, password));
 </script>
 
 <template>
@@ -19,7 +34,7 @@ definePageMeta({
       <CardTitle class="auth--title register--title">Register</CardTitle>
     </CardHeader>
     <CardContent>
-      <form class="auth__form register__form">
+      <form class="auth__form register__form" @submit="onSubmit">
         <div class="auth__form--line">
           <FormField name="firstName" v-slot="{ componentField }">
             <FormItem>
