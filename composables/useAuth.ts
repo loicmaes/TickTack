@@ -3,7 +3,7 @@ import {useState, useCookie} from "#imports";
 
 export const useAuthCookie = () => useCookie('auth_token');
 
-export async function useUser (): Promise<IUser> {
+export async function useUser (): Promise<IUser | null> {
   const authCookie = useAuthCookie();
   const user = useState<IUser>('user');
 
@@ -11,7 +11,7 @@ export async function useUser (): Promise<IUser> {
     const { data } = await useFetch<IUser>('/api/auth/recoverByToken', {
       headers: useRequestHeaders(['cookie']),
     });
-    if (!data.value) throw Error('Logged out!');
+    if (!data.value) return null;
     user.value = data.value;
   }
 
