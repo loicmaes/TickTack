@@ -1,0 +1,29 @@
+.auth
+  @apply w-full flex flex-col
+
+  &--back
+    @apply self-start
+
+  &-layout
+    @apply min-h-screen w-full grid place-items-center px-6
+
+    &--wrapper
+      @apply w-full max-w-96 sm:max-w-[32rem] flex flex-col gap-4 items-start
+
+  &--title
+    @apply text-center
+
+  &__form
+    @apply flex flex-col gap-4
+
+    &--line
+      @apply flex flex-col gap-4 sm:flex-row
+
+      > *
+        @apply flex-1
+
+    &--submit
+      @apply mt-4 self-center
+
+  &--footer
+    @apply self-center
