@@ -1,7 +1,6 @@
 import {IUser} from "~/types/IUser";
-import {useRuntimeConfig} from "#imports";
 import {v4 as uuidv4} from "uuid";
-import {createSession, deleteSession, findSessionByAuthToken} from "~/server/database/repositories/session.repository";
+import {createSession, findSessionByAuthToken} from "~/server/database/repositories/session.repository";
 
 export async function makeSession (user: IUser, event: any): Promise<IUser | undefined> {
   const authToken = uuidv4();
@@ -17,6 +16,5 @@ export async function makeSession (user: IUser, event: any): Promise<IUser | und
 
 export async function findUserBySessionToken (userUid: string, authToken: string) {
   const session = await findSessionByAuthToken(userUid, authToken);
-  if (!session) throw Error('Error Recovering Session');
-  return session.user;
+  return session?.user;
 }

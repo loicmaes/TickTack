@@ -28,9 +28,9 @@ export async function deleteAllSessions (userUid: string) {
   });
 }
 
-export async function findSessionByAuthToken (userUid: string, authToken: string): Promise<ISession> {
-  const user: IUser = await findUserByAuthToken(userUid, authToken) as IUser;
-  return { authToken, user, userUid: user.uid };
+export async function findSessionByAuthToken (userUid: string, authToken: string): Promise<ISession | null> {
+  const user = await findUserByAuthToken(userUid, authToken);
+  return user ? { authToken, user, userUid: user.uid } : null;
 }
 export async function findUserByAuthToken (userUid: string, authToken: string): Promise<IUser | null> {
   return await prisma.session.findUnique({
