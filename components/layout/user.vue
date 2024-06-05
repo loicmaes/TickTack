@@ -26,7 +26,7 @@ import {
     DropdownMenuRadioGroup,
     DropdownMenuRadioItem,
 } from "~/components/ui/dropdown-menu";
-import {Avatar, AvatarFallback, AvatarImage} from "~/components/ui/avatar";
+import {Avatar, AvatarFallback} from "~/components/ui/avatar";
 
 const user = ref<IUser | null>(useState<IUser>('user').value);
 const initials = computed(_ => user.value ? `${user.value.firstName.substring(0, 1)}${user.value.lastName.substring(0, 1)}`.toUpperCase() : null);
