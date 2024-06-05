@@ -42,5 +42,8 @@ export default defineNuxtConfig({
   shadcn: {
     prefix: '',
     componentDir: './components/ui'
+  },
+  runtimeConfig: {
+    jwtSecret: process.env.JWT_SECRET,
   }
 })

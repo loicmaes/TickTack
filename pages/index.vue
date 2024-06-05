@@ -1,5 +1,10 @@
 <script setup lang="ts">
 import { Button } from "~/components/ui/button";
+import {useHead} from "#imports";
+
+useHead({
+  title: 'TickTack, the new time tracking tool'
+});
 </script>
 
 <template>
