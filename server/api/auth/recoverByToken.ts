@@ -4,6 +4,7 @@ import {getCookie} from "#imports";
 
 export default defineEventHandler(async (event): Promise<IUser | undefined> => {
   const authToken = getCookie(event, 'auth_token');
-  if (!authToken) return undefined;
-  return await findUserBySessionToken(authToken);
+  const userUid = getCookie(event, 'user_uid');
+  if (!authToken || !userUid) return undefined;
+  return await findUserBySessionToken(userUid, authToken);
 });

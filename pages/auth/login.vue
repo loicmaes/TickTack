@@ -5,6 +5,10 @@ import {Input} from "~/components/ui/input";
 import {Button} from "~/components/ui/button";
 import {ArrowLeft} from "@iconoir/vue";
 import {useHead} from "#imports";
+import {toTypedSchema} from "@vee-validate/zod";
+import * as z from "zod";
+import {useForm} from "vee-validate";
+import {loginWithEmail} from "~/composables/useAuth";
 
 definePageMeta({
   layout: 'auth',
@@ -14,6 +18,16 @@ definePageMeta({
 useHead({
   title: 'TickTack · Connection'
 });
+
+const schema = toTypedSchema(z.object({
+  email: z.string().email().min(1),
+  password: z.string().regex(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/).min(1),
+}));
+const { handleSubmit } = useForm({
+  validationSchema: schema,
+});
+
+const onSubmit = handleSubmit(async ({ email, password }) => await loginWithEmail(email, password));
 </script>
 
 <template>
@@ -25,7 +39,7 @@ useHead({
       <CardTitle class="auth--title login--title">Login</CardTitle>
     </CardHeader>
     <CardContent>
-      <form class="auth__form login__form">
+      <form class="auth__form login__form" @submit="onSubmit">
         <FormField name="email" v-slot="{ componentField }">
           <FormItem>
             <FormLabel>Email Address</FormLabel>

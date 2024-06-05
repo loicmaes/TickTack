@@ -8,6 +8,7 @@ import {toTypedSchema} from "@vee-validate/zod";
 import * as z from "zod";
 import {useForm} from "vee-validate";
 import {useHead} from "#imports";
+import {registerWithEmail} from "~/composables/useAuth";
 
 definePageMeta({
   layout: 'auth',

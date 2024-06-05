@@ -2,15 +2,6 @@ import {type IUser} from "~/types/IUser";
 import prisma from "~/server/database/client";
 import bcrypt from "bcrypt";
 
-const findSelectBody = {
-  uid: true,
-  firstName: true,
-  lastName: true,
-  email: true,
-  createdAt: true,
-  updatedAt: true,
-};
-
 export async function createUser (data: IUser): Promise<IUser> {
   return await prisma.user.create({
     data: {
@@ -20,11 +11,10 @@ export async function createUser (data: IUser): Promise<IUser> {
   })
 }
 
-export async function findUserByEmail (email: string): Promise<Partial<IUser> | null> {
+export async function findUserByEmail (email: string): Promise<IUser | null> {
   return await prisma.user.findUnique({
     where: {
       email
-    },
-    select: findSelectBody,
+    }
   })
 }
