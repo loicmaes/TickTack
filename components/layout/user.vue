@@ -39,7 +39,8 @@ const theme = computed(_ => {
     default:
       return colorMode.preference;
   }
-})
+});
+
 const logout = async _ => {
   await localLogout();
   user.value = null;
@@ -56,13 +57,9 @@ const logout = async _ => {
     <DropdownMenuContent class="min-w-44">
       <DropdownMenuLabel>{{ user.firstName }} {{ user.lastName }}</DropdownMenuLabel>
       <DropdownMenuSeparator />
+      <slot name="content" />
+      <DropdownMenuSeparator />
       <DropdownMenuGroup>
-        <DropdownMenuItem class="item" as-child>
-          <NuxtLink to="/app">
-            <Dashboard class="icon" />
-            <span>Dashboard</span>
-          </NuxtLink>
-        </DropdownMenuItem>
         <DropdownMenuSub>
           <DropdownMenuSubTrigger class="item">
             <ColorFilter class="icon" />
@@ -78,9 +75,6 @@ const logout = async _ => {
             </DropdownMenuSubContent>
           </DropdownMenuPortal>
         </DropdownMenuSub>
-      </DropdownMenuGroup>
-      <DropdownMenuSeparator />
-      <DropdownMenuGroup>
         <DropdownMenuItem class="item" as-child>
           <NuxtLink to="/">
             <Settings class="icon" />
