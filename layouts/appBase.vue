@@ -9,11 +9,7 @@ import TopBar from "~/components/layout/app/topBar.vue";
     <SideBar />
 
     <main class="app-container">
-      <TopBar />
-
-      <div class="app-renderer">
-        <slot />
-      </div>
+      <slot />
     </main>
   </div>
 </template>
