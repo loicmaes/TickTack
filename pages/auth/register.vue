@@ -8,16 +8,17 @@ import {toTypedSchema} from "@vee-validate/zod";
 import * as z from "zod";
 import {useForm} from "vee-validate";
 import {useHead} from "#imports";
-import {registerWithEmail} from "~/composables/useAuth";
+import {registerWithEmail, useStrictProtectedAccess} from "~/composables/useAuth";
 
 definePageMeta({
-  layout: 'auth',
-  middleware: 'is-not-authenticated'
+  layout: 'auth'
 });
 
 useHead({
   title: 'TickTack · Registration'
 });
+
+await useStrictProtectedAccess();
 
 const schema = toTypedSchema(z.object({
   firstName: z.string().min(1),

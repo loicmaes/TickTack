@@ -3,7 +3,7 @@ import User from "~/components/layout/user.vue";
 import {DropdownMenuGroup, DropdownMenuItem} from "~/components/ui/dropdown-menu";
 import {PasteClipboard} from "@iconoir/vue";
 
-const { name: pageName } = useRoute();
+const pageName = useState<string>('page-name');
 </script>
 
 <template>

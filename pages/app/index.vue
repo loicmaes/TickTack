@@ -2,16 +2,19 @@
 import {useState} from "#imports";
 import {type IUser} from "~/types/IUser";
 import {useHead} from "#imports";
+import {useStrictProtectedAccess} from "~/composables/useAuth";
 
 definePageMeta({
-  layout: 'app-base',
-  middleware: 'is-authenticated',
-  name: 'Overview'
+  layout: 'app-base'
 });
 
 useHead({
   title: 'TickTack · Home'
 });
+
+await useStrictProtectedAccess(true);
+
+useState<string>('page-name').value = 'Overview';
 
 const user = useState<IUser>('user').value;
 </script>
