@@ -17,6 +17,7 @@ model User {
   updatedAt DateTime @updatedAt
 
   sessions Session[]
+  sw_runs  StopWatchRun[]
 
   @@map("users")
 }
@@ -29,8 +30,33 @@ model Session {
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
-  user User @relation(fields: [userUid], references: [uid])
+  user User @relation(fields: [userUid], references: [uid], onDelete: Cascade)
 
   @@unique([userUid, authToken])
   @@map("sessions")
+}
+
+model StopWatchRun {
+  id          Int      @id @default(autoincrement())
+  userUid     String
+  startedAt   DateTime
+  timeElapsed Float
+  label       String?
+
+  user   User             @relation(fields: [userUid], references: [uid], onDelete: Cascade)
+  breaks StopWatchBreak[]
+
+  @@map("sw_runs")
+}
+
+model StopWatchBreak {
+  id                  Int     @id @default(autoincrement())
+  runId               Int
+  label               String?
+  relativeTimeElapsed Float
+  absoluteTimeElapsed Float
+
+  run StopWatchRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+
+  @@map("sw_breaks")
 }
