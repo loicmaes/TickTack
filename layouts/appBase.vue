@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import SideBar from "~/components/layout/app/sideBar.vue";
-import TopBar from "~/components/layout/app/topBar.vue";
-
 </script>
 
 <template>
