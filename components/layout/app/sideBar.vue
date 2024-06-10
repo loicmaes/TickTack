@@ -53,7 +53,7 @@ import Logo from "~/components/logo.vue";
 
 <style scoped lang="sass">
 .sidebar
-  @apply min-w-80 border-r-2 border-stone-100 dark:border-stone-900
+  @apply min-w-56 max-w-80 border-r-2 border-stone-100 dark:border-stone-900
 
   &__head
     @apply flex py-8 px-7 mb-4
