@@ -9,6 +9,10 @@ import {Card, CardContent, CardFooter, CardHeader} from "~/components/ui/card";
 import {Separator} from "~/components/ui/separator";
 import RunBreak from "~/components/locals/stopwatch/runBreak.vue";
 import {type FormattedTime, getTimeFormatted} from "assets/scripts/time";
+import {saveRunCopy, useStopwatchHistory} from "~/composables/useStopWatch";
+import type {IRun} from "~/types/stopwatch/IRun";
+import type {IUser} from "~/types/IUser";
+import {useState} from "#imports";
 
 await useStrictProtectedAccess(true);
 
@@ -23,10 +27,12 @@ useHead({
 const isCounting = ref<boolean>(false);
 const isPaused = ref<boolean>(false);
 const timeElapsed = ref<number>(0);
+const initialTimer = ref<number | null>(null);
 const startedTime = ref<number | null>(null);
 const countingInterval = ref();
 const breaks = ref<IBreak[]>([]);
-const history = ref<any[]>([]);
+
+const history = ref<IRun[]>(await useStopwatchHistory());
 
 const formattedElapsed = computed((): FormattedTime => getTimeFormatted(timeElapsed.value));
 
@@ -49,6 +55,7 @@ function start () {
   reset(true);
 
   isCounting.value = true;
+  initialTimer.value = Date.now();
   startedTime.value = Date.now();
   countingInterval.value = setInterval(_ => {
     if (isPaused.value) return;
@@ -79,6 +86,30 @@ function addBreak () {
 }
 function removeBreak (index: number) {
   breaks.value.splice(index, 1);
+
+  if (breaks.value.length === 0) return;
+
+  const updated = [...breaks.value];
+  updated[0].relativeTimeElapsed = updated[0].absoluteTimeElapsed;
+  for (let i = 1 ; i < updated.length; ++i)
+    updated[i].relativeTimeElapsed = updated[i].absoluteTimeElapsed - updated[i - 1].absoluteTimeElapsed;
+
+  breaks.value = [...updated];
+}
+function clearBreaks () {
+  breaks.value = [];
+}
+
+async function saveACopy () {
+  const copy = await saveRunCopy({
+    startedAt: initialTimer.value,
+    timeElapsed: timeElapsed.value,
+    breaks: breaks.value,
+  });
+  history.value = [
+      ...history.value,
+      copy,
+  ];
 }
 </script>
 
@@ -86,9 +117,9 @@ function removeBreak (index: number) {
   <main data-page="stopwatch" class="page stopwatch">
     <PageHeader name="Stopwatch" has-premium-feature>
       <template #actions>
-        <Button type="button">
+        <Button type="button" :disabled="!timeElapsed || isCounting" @click="saveACopy">
           <FloppyDisk class="h-4 w-4 mr-2" />
-          <span>Save</span>
+          <span>Save a copy</span>
         </Button>
       </template>
     </PageHeader>
@@ -160,9 +191,14 @@ function removeBreak (index: number) {
       </Card>
 
       <Card class="stopwatch__breaks">
+        <CardHeader class="stopwatch__breaks--header">
+          <CardTitle>Run breaks</CardTitle>
+          <Button typ="button" @click="clearBreaks" v-if="breaks.length"><Prohibition /></Button>
+        </CardHeader>
+        <Separator class="w-full" />
         <CardContent as-child class="stopwatch__breaks--content" v-if="breaks.length">
           <ul class="stopwatch__breaks">
-            <li v-for="(b, index) in breaks" :key="`break-${b.id ?? index}`">
+            <li v-for="(b, index) in breaks" :key="`${b.relativeTimeElapsed}${b.absoluteTimeElapsed}`">
               <RunBreak :relative-time-elapsed="b.relativeTimeElapsed" :index="index" :absolute-time-elapsed="b.absoluteTimeElapsed" @delete="removeBreak" />
             </li>
           </ul>
@@ -179,8 +215,10 @@ function removeBreak (index: number) {
           <CardTitle>Saved runs</CardTitle>
         </CardHeader>
         <Separator class="w-full" />
-        <CardContent class="stopwatch__history--container" v-if="history.length"></CardContent>
-        <CardContent class="stopwatch__history--container-no" v-else>
+        <CardContent class="stopwatch__history--container" v-if="history.length">
+          <div :key="`sw-history-${run.id}`" v-for="run in history">{{ run.label ?? `Unnamed ${run.id}` }}</div>
+        </CardContent>
+        <CardContent class="no-content" v-else>
           No runs saved for now...
         </CardContent>
       </Card>
@@ -216,7 +254,10 @@ function removeBreak (index: number) {
       @apply flex justify-center gap-3
 
   &__breaks
-    @apply col-span-2 overflow-auto
+    @apply col-span-2 overflow-y-auto
+
+    &--header
+      @apply flex-row items-center justify-between
 
     &--content
       @apply py-3
@@ -227,9 +268,6 @@ function removeBreak (index: number) {
     &--container
       @apply py-6 overflow-y-auto
 
-      &-no
-        @apply py-6 text-stone-300 dark:text-stone-700
-
 .no-content
-  @apply w-full h-full flex flex-col items-center justify-center gap-2 text-stone-300 dark:text-stone-700
+  @apply py-6 text-stone-300 dark:text-stone-700
 </style>
