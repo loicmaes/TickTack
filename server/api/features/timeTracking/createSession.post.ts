@@ -1,6 +1,12 @@
-import {defineEventHandler, readBody} from "#imports";
+import {defineEventHandler, readBody, sendError} from "#imports";
+import {createWorkSession} from "~/server/database/repositories/timeTracking.repository";
+import {IWorkSession} from "~/types/timeTracking/IWorkSession";
 
 export default defineEventHandler(async (event) => {
-  const body = await readBody(event);
-  console.log(`Received:`, body);
+  const {userUid, name, start} = await readBody<IWorkSession>(event);
+  return await createWorkSession({
+    userUid,
+    name,
+    start
+  });
 });

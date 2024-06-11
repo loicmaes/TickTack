@@ -6,6 +6,6 @@ export interface IWorkSession {
   name: string;
   start: Date;
   end?: Date;
-  elapsed: number;
-  steps: IWorkSessionStep[];
+  elapsed?: number;
+  steps?: IWorkSessionStep[];
 }
