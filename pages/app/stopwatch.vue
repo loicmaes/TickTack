@@ -13,6 +13,7 @@ import {saveRunCopy, useStopwatchHistory} from "~/composables/useStopWatch";
 import type {IRun} from "~/types/stopwatch/IRun";
 import type {IUser} from "~/types/IUser";
 import {useState} from "#imports";
+import PageContent from "~/components/layout/app/page/pageContent.vue";
 
 await useStrictProtectedAccess(true);
 
@@ -124,7 +125,7 @@ async function saveACopy () {
       </template>
     </PageHeader>
 
-    <div class="page--renderer stopwatch--grid">
+    <PageContent class="stopwatch--grid">
       <Card class="stopwatch__head">
         <CardContent class="stopwatch__head--head">
           <p class="stopwatch__head--counter">
@@ -222,7 +223,7 @@ async function saveACopy () {
           No runs saved for now...
         </CardContent>
       </Card>
-    </div>
+    </PageContent>
   </main>
 </template>
 
