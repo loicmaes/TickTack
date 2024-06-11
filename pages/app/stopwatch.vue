@@ -125,7 +125,7 @@ async function saveACopy () {
       </template>
     </PageHeader>
 
-    <PageContent class="stopwatch--grid">
+    <PageContent grid="top-first">
       <Card class="stopwatch__head">
         <CardContent class="stopwatch__head--head">
           <p class="stopwatch__head--counter">
@@ -232,9 +232,6 @@ async function saveACopy () {
 
 .stopwatch
   @apply h-full
-
-  &--grid
-    @apply grid grid-rows-[auto_1fr] grid-cols-3 gap-6
 
   &__head
     @apply pt-12 pb-6 col-span-3
