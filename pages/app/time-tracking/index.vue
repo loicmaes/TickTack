@@ -1,23 +1,24 @@
 <script setup lang="ts">
 import {
-    Button,
-    Input,
-    Label,
-    Sheet,
-    SheetContent,
-    SheetDescription,
-    SheetTitle,
-    SheetTrigger,
-    SheetHeader,
-    SheetFooter,
-    SheetClose,
-    Card,
-    CardHeader,
-    CardTitle,
-    CardContent,
-    Separator,
-    DonutChart
+  Button,
+  Input,
+  Label,
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetTitle,
+  SheetTrigger,
+  SheetHeader,
+  SheetFooter,
+  SheetClose,
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  Separator,
+  DonutChart, NuxtLink
 } from "#components";
+import DataTable from "~/components/ui/data-table/DataTable.vue";
 import type {IUser} from "~/types/IUser";
 import {Plus, FastArrowRight} from "@iconoir/vue";
 import {useStrictProtectedAccess} from "~/composables/useAuth";
@@ -25,6 +26,9 @@ import PageHeader from "~/components/layout/app/page/pageHeader.vue";
 import PageContent from "~/components/layout/app/page/pageContent.vue";
 import type {IWorkSession} from "~/types/timeTracking/IWorkSession";
 import {useWorkHistory} from "~/composables/useTimeTracking";
+import { h } from "vue";
+import type {ColumnDef} from "@tanstack/vue-table";
+import DataTableAction from "~/components/locals/time-tracking/DataTableAction.vue";
 
 await useStrictProtectedAccess(true);
 
@@ -41,7 +45,46 @@ const premium = computed((): boolean => user?.premium || length.value < 4);
 
 const sessionName = ref<string | undefined>();
 const canSubmit = computed((): boolean => /^[\w ._|\-!?,;:=&@é"'(§èçà)òùñ]{4,}$/g.test(sessionName.value ?? ''));
+
+const donutValueFormatter = (tick: number) => new Intl.NumberFormat('en-US', {
+  style: 'unit',
+  unit: 'hour',
+}).format(tick);
+
 const history = ref<IWorkSession[]>(await useWorkHistory());
+const tableColumns: ColumnDef<IWorkSession>[] = [
+  {
+    accessorKey: 'name',
+    header: () => h('div', {}, 'Name'),
+    cell: ({ row }) => h('div', { class: 'flex' }, h(NuxtLink, { class: 'flex-1 leading-loose', to: `/app/time-tracking/${row.original.uid}` }, row.getValue('name'))),
+  },
+  {
+    accessorKey: 'end',
+    header: () => h('div', { class: 'text-center' }, 'Status'),
+    cell: ({ row }) => {
+      const endDate: string = row.getValue('end');
+      return h('div', { class: 'text-center' }, endDate ? 'Ended' : 'In progress');
+    }
+  },
+  {
+    accessorKey: 'elapsed',
+    header: () => h('div', { class: 'text-right' }, 'Elapsed'),
+    cell: ({ row }) => {
+      const elapsed = Number.parseFloat(row.getValue('elapsed'));
+      const formatted = new Intl.NumberFormat('en-US', {
+        style: 'unit',
+        unit: 'hour',
+      }).format(elapsed);
+      return h('div', { class: 'text-right font-medium' }, formatted);
+    }
+  },
+  {
+    id: 'actions',
+    enableHiding: false,
+    cell: ({ row }) => h('div', { class: 'relative text-right' }, h(DataTableAction, { session: row.original }))
+  }
+];
+
 
 async function submit () {
   if (!sessionName.value) return;
@@ -91,12 +134,14 @@ async function submit () {
           <CardTitle>Resume</CardTitle>
         </CardHeader>
         <Separator />
-        <CardContent class="flex-1 grid place-items-center py-0">
-          <DonutChart v-if="history?.length"
+        <CardContent class="flex-1 grid place-items-center py-0"  v-if="history?.length">
+          <DonutChart
             :data="history"
             index="name"
             category="elapsed"
-            type="pie"
+            type="donut"
+            :value-formatter="donutValueFormatter"
+            :showLegend="true"
           />
         </CardContent>
         <CardContent class="page--no-content" v-else>
@@ -119,10 +164,8 @@ async function submit () {
           <CardTitle>Previous sessions</CardTitle>
         </CardHeader>
         <Separator />
-        <CardContent class="flex flex-col gap-5">
-          <NuxtLink :to="`/app/time-tracking/${session.uid}`" v-for="session in history" :key="session.name">
-            {{ session.name }}
-          </NuxtLink>
+        <CardContent class="flex flex-col gap-5 p-0">
+          <DataTable :columns="tableColumns" :data="history" />
         </CardContent>
       </Card>
     </PageContent>
