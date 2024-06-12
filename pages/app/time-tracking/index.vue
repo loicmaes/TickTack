@@ -16,7 +16,6 @@ import {
     CardTitle,
     CardContent,
     Separator,
-    BarChart,
     DonutChart
 } from "#components";
 import type {IUser} from "~/types/IUser";
