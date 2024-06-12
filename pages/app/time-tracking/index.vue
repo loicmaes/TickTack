@@ -99,6 +99,9 @@ async function submit () {
             type="pie"
           />
         </CardContent>
+        <CardContent class="page--no-content" v-else>
+          No data to compute...
+        </CardContent>
       </Card>
 
       <Card class="col-start-1">
@@ -106,7 +109,9 @@ async function submit () {
           <CardTitle>Active sessions</CardTitle>
         </CardHeader>
         <Separator />
-        <CardContent></CardContent>
+        <CardContent class="page--no-content">
+          No active sessions...
+        </CardContent>
       </Card>
 
       <Card class="col-start-2 col-span-2 row-start-1 row-span-2">

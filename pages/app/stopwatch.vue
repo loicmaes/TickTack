@@ -204,10 +204,8 @@ async function saveACopy () {
             </li>
           </ul>
         </CardContent>
-        <CardContent class="no-content" v-else>
-          <div>
-            No breaks for now...
-          </div>
+        <CardContent class="page--no-content" v-else>
+          No breaks for now...
         </CardContent>
       </Card>
 
@@ -219,7 +217,7 @@ async function saveACopy () {
         <CardContent class="stopwatch__history--container" v-if="history.length">
           <div :key="`sw-history-${run.id}`" v-for="run in history">{{ run.label ?? `Unnamed ${run.id}` }}</div>
         </CardContent>
-        <CardContent class="no-content" v-else>
+        <CardContent class="page--no-content" v-else>
           No runs saved for now...
         </CardContent>
       </Card>
@@ -265,7 +263,4 @@ async function saveACopy () {
 
     &--container
       @apply py-6 overflow-y-auto
-
-.no-content
-  @apply py-6 text-stone-300 dark:text-stone-700
 </style>
