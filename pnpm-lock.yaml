@@ -17,6 +17,9 @@ importers:
       '@prisma/client':
         specifier: ^5.15.0
         version: 5.15.0(prisma@5.15.0)
+      '@tanstack/vue-table':
+        specifier: ^8.17.3
+        version: 8.17.3(vue@3.4.27(typescript@5.4.5))
       '@unovis/ts':
         specifier: ^1.4.1
         version: 1.4.1
@@ -1072,8 +1075,18 @@ packages:
   '@swc/helpers@0.5.11':
     resolution: {integrity: sha512-YNlnKRWF2sVojTpIyzwou9XoTNbzbzONwRhOoniEioF1AtaitTvVZblaQRrAzChWQ1bLYyYSWzM18y4WwgzJ+A==}
 
+  '@tanstack/table-core@8.17.3':
+    resolution: {integrity: sha512-mPBodDGVL+fl6d90wUREepHa/7lhsghg2A3vFpakEhrhtbIlgNAZiMr7ccTgak5qbHqF14Fwy+W1yFWQt+WmYQ==}
+    engines: {node: '>=12'}
+
   '@tanstack/virtual-core@3.5.0':
     resolution: {integrity: sha512-KnPRCkQTyqhanNC0K63GBG3wA8I+D1fQuVnAvcBF8f13akOKeQp1gSbu6f77zCxhEk727iV5oQnbHLYzHrECLg==}
+
+  '@tanstack/vue-table@8.17.3':
+    resolution: {integrity: sha512-19amh2JJR4cFKmi3ZQERwwJg1ucoLm955Xg+RzypCMn6/dmHEzDu2TkVH/riaZFw5JbVfl17MoobMjWNE/fAEg==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      vue: '>=3.2'
 
   '@tanstack/vue-virtual@3.5.0':
     resolution: {integrity: sha512-wvRQ8sFxn/NDr3WvI5XabhFovZ5MBmpEck2GHpTxYunmV63Ovpl30lRu6W5BPQo35a1GqDZ+Pvzlz6WDWRNqqw==}
@@ -5831,7 +5844,14 @@ snapshots:
     dependencies:
       tslib: 2.6.2
 
+  '@tanstack/table-core@8.17.3': {}
+
   '@tanstack/virtual-core@3.5.0': {}
+
+  '@tanstack/vue-table@8.17.3(vue@3.4.27(typescript@5.4.5))':
+    dependencies:
+      '@tanstack/table-core': 8.17.3
+      vue: 3.4.27(typescript@5.4.5)
 
   '@tanstack/vue-virtual@3.5.0(vue@3.4.27(typescript@5.4.5))':
     dependencies:
