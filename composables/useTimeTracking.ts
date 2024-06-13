@@ -86,7 +86,7 @@ export async function deleteWorkSession (uid: string): Promise<IWorkSession | nu
     });
     toast({
       title: 'Well done 👏',
-      description: `${res.name} is gone and it won't appear again! Keep working, practice makes perfect.`,
+      description: `${res.name} is gone and it won't appear again! Keep working, practice makes perfect 💪`,
     });
     return res;
   } catch (e) {
