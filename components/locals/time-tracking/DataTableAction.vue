@@ -12,6 +12,8 @@ import {
 import { MoreHoriz, Trash, Edit, SecurityPass, Play, Pause, Eye } from "@iconoir/vue";
 import type {IWorkSession} from "~/types/timeTracking/IWorkSession";
 import type {IWorkSessionStep} from "~/types/timeTracking/IWorkSessionStep";
+import RenameDialog from "~/components/locals/time-tracking/RenameDialog.vue";
+defineEmits(['session-renamed', 'session-deleted']);
 
 const { session } = defineProps<{
   session: IWorkSession,
@@ -19,6 +21,7 @@ const { session } = defineProps<{
 const { uid, end, steps, status } = session;
 const ended: boolean = status === 'Ended';
 const lastStep: IWorkSessionStep | undefined = (steps as IWorkSessionStep[]).findLast(step => step.status === 'In Progress');
+const isRenaming = ref<boolean>(false);
 </script>
 
 <template>
@@ -53,7 +56,7 @@ const lastStep: IWorkSessionStep | undefined = (steps as IWorkSessionStep[]).fin
       </DropdownMenuGroup>
       <Separator />
       <DropdownMenuGroup>
-        <DropdownMenuItem class="item">
+        <DropdownMenuItem class="item" @click.stop="isRenaming = true">
           <Edit class="item--icon" />
           <span>Rename</span>
         </DropdownMenuItem>
@@ -64,6 +67,7 @@ const lastStep: IWorkSessionStep | undefined = (steps as IWorkSessionStep[]).fin
       </DropdownMenuGroup>
     </DropdownMenuContent>
   </DropdownMenu>
+  <RenameDialog :renaming="isRenaming" :session="session" @renamed="$emit('session-renamed', $event)" @state-change="isRenaming = $event" />
 </template>
 
 <style scoped lang="sass">

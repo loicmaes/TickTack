@@ -44,3 +44,32 @@ export async function useWorkHistory (): Promise<IWorkSession[]> {
     return [];
   }
 }
+export async function renameWorkSession (uid: string, newName: string): Promise<IWorkSession | null> {
+  const {toast} = useToast();
+
+  try {
+    const renamed = await $fetch<IWorkSession>('/api/features/timeTracking/renameSession', {
+      headers: useRequestHeaders(),
+      method: 'PATCH',
+      body: {
+        uid,
+        newName
+      },
+    });
+
+    toast({
+      title: 'Well done 👏',
+      description: `Your session was successfully renamed! Find it using "${newName}".`,
+    });
+
+    return renamed;
+  } catch (e) {
+    toast({
+      title: 'Oops 💢',
+      description: 'Something gone wrong while renaming your session... Try again.',
+      variant: 'destructive',
+    });
+  }
+
+  return null;
+}
