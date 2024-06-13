@@ -89,7 +89,7 @@ model WorkSessionStep {
   start      DateTime
   end        DateTime?
   elapsed    Float               @default(0)
-  type       WorkSessionStepType @default(working)
+  stepType   WorkSessionStepType @default(working)
   comment    String?
 
   session WorkSession @relation(fields: [sessionUid], references: [uid], onDelete: Cascade)

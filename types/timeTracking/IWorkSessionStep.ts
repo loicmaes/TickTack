@@ -6,6 +6,7 @@ export interface IWorkSessionStep {
   start: Date;
   end?: Date;
   elapsed: number;
-  type: WorkSessionStepType;
+  stepType: WorkSessionStepType;
+  status?: WorkSessionProgressionStatus;
   comment?: string;
 }
