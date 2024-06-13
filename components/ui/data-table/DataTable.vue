@@ -17,6 +17,7 @@ import {
 const props = defineProps<{
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  keyName: string;
 }>();
 const table = useVueTable({
   get data () { return props.data },
@@ -41,7 +42,7 @@ const table = useVueTable({
       </TableHeader>
       <TableBody>
         <template v-if="table.getRowModel().rows?.length">
-          <TableRow class="border-b-stone-200 dark:border-b-stone-800" v-for="row in table.getRowModel().rows" :key="row.id" :data-state="row.getIsSelected() ? 'selected' : undefined">
+          <TableRow class="border-b-stone-200 dark:border-b-stone-800" v-for="row in table.getRowModel().rows" :key="row.original[keyName]" :data-state="row.getIsSelected() ? 'selected' : undefined">
             <TableCell v-for="cell in row.getVisibleCells()" :key="cell.id">
               <FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" />
             </TableCell>
