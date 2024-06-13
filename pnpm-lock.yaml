@@ -15,8 +15,8 @@ importers:
         specifier: ^3.4.1
         version: 3.4.1(rollup@4.18.0)
       '@prisma/client':
-        specifier: ^5.15.0
-        version: 5.15.0(prisma@5.15.0)
+        specifier: 5.16.0-dev.35
+        version: 5.16.0-dev.35(prisma@5.15.0)
       '@tanstack/vue-table':
         specifier: ^8.17.3
         version: 8.17.3(vue@3.4.27(typescript@5.4.5))
@@ -861,8 +861,8 @@ packages:
   '@polka/url@1.0.0-next.25':
     resolution: {integrity: sha512-j7P6Rgr3mmtdkeDGTe0E/aYyWEWVtc5yFXtHCRHs28/jptDEWfaVOc5T7cblqy1XKPPfCxJc/8DwQ5YgLOZOVQ==}
 
-  '@prisma/client@5.15.0':
-    resolution: {integrity: sha512-wPTeTjbd2Q0abOeffN7zCDCbkp9C9cF+e9HPiI64lmpehyq2TepgXE+sY7FXr7Rhbb21prLMnhXX27/E11V09w==}
+  '@prisma/client@5.16.0-dev.35':
+    resolution: {integrity: sha512-nvcdSmDS2bzOG0fE0GvyR/nuZpuIYosOtL8frSCv1RYOvnEQMcrZEKUdHpWB2WJ1Lj1JJAeDhDiGosWItSNxVg==}
     engines: {node: '>=16.13'}
     peerDependencies:
       prisma: '*'
@@ -5661,7 +5661,7 @@ snapshots:
 
   '@polka/url@1.0.0-next.25': {}
 
-  '@prisma/client@5.15.0(prisma@5.15.0)':
+  '@prisma/client@5.16.0-dev.35(prisma@5.15.0)':
     optionalDependencies:
       prisma: 5.15.0
 
