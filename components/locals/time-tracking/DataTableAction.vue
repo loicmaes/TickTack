@@ -16,9 +16,9 @@ import type {IWorkSessionStep} from "~/types/timeTracking/IWorkSessionStep";
 const { session } = defineProps<{
   session: IWorkSession,
 }>();
-const { uid, end, steps } = session;
-const _steps = steps as IWorkSessionStep[];
-const lastStep = _steps[_steps.length - 1];
+const { uid, end, steps, status } = session;
+const ended: boolean = status === 'Ended';
+const lastStep: IWorkSessionStep | undefined = (steps as IWorkSessionStep[]).findLast(step => step.status === 'In Progress');
 </script>
 
 <template>
@@ -38,11 +38,11 @@ const lastStep = _steps[_steps.length - 1];
             <span>View details</span>
           </NuxtLink>
         </DropdownMenuItem>
-        <DropdownMenuItem class="item" v-if="!end && lastStep.type === 'working'">
+        <DropdownMenuItem class="item" v-if="!ended && lastStep && lastStep.stepType === 'working'">
           <Pause class="item--icon" />
           <span>Take a break</span>
         </DropdownMenuItem>
-        <DropdownMenuItem class="item" v-else-if="!end && lastStep.type === 'break'">
+        <DropdownMenuItem class="item" v-else-if="!ended && lastStep && lastStep.stepType === 'break'">
           <Play class="item--icon" />
           <span>Back to work</span>
         </DropdownMenuItem>

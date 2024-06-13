@@ -1,5 +1,7 @@
 import type {IWorkSessionStep} from "~/types/timeTracking/IWorkSessionStep";
 
+export type WorkSessionProgressionStatus = 'In Progress' | 'Ended';
+
 export interface IWorkSession {
   uid?: string;
   userUid: string;
@@ -7,5 +9,6 @@ export interface IWorkSession {
   start: Date;
   end?: Date;
   elapsed?: number;
+  status?: WorkSessionProgressionStatus;
   steps?: IWorkSessionStep[];
 }

@@ -27,7 +27,7 @@ export async function createWorkSession ({ userUid, name }: IWorkSession): Promi
 }
 export async function recoverWorkSessions (userUid: string): Promise<IWorkSession[]> {
   // @ts-ignore
-  return await prisma.workSession.findMany({
+  const sessions: IWorkSession[] = await prisma.workSession.findMany({
     where: {
       userUid,
     },
@@ -38,10 +38,18 @@ export async function recoverWorkSessions (userUid: string): Promise<IWorkSessio
       start: 'desc'
     }
   });
+  return sessions.map(session => ({
+    ...session,
+    status: session.end ? 'Ended' : 'In Progress',
+    steps: session.steps ? session.steps.map(step => ({
+      ...step,
+      status: step.end ? 'Ended' : 'In Progress',
+    })) : [],
+  }));
 }
 export async function recoverWorkSession (uid: string): Promise<IWorkSession | null> {
   // @ts-ignore
-  return await prisma.workSession.findUnique({
+  const session: IWorkSession | null = await prisma.workSession.findUnique({
     where: {
       uid
     },
@@ -49,6 +57,14 @@ export async function recoverWorkSession (uid: string): Promise<IWorkSession | n
       steps: true,
     }
   });
+  return !session ? null : {
+    ...session,
+    status: session.end ? 'Ended' : 'In Progress',
+    steps: session.steps ? session.steps?.map(step => ({
+      ...step,
+      status: step.end ? 'Ended' : 'In Progress',
+    })) : []
+  };
 }
 export async function deleteWorkSession (uid: string) {} // TODO
 export async function terminateWorkSession (uid: string) {} // TODO

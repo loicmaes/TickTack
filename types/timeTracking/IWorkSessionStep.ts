@@ -1,3 +1,5 @@
+import type {WorkSessionProgressionStatus} from "~/types/timeTracking/IWorkSession";
+
 export type WorkSessionStepType = 'break' | 'working';
 
 export interface IWorkSessionStep {

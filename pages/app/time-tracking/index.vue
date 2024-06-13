@@ -59,12 +59,9 @@ const tableColumns: ColumnDef<IWorkSession>[] = [
     cell: ({ row }) => h('div', { class: 'flex' }, h(NuxtLink, { class: 'flex-1 leading-loose', to: `/app/time-tracking/${row.original.uid}` }, row.getValue('name'))),
   },
   {
-    accessorKey: 'end',
+    accessorKey: 'status',
     header: () => h('div', { class: 'text-center' }, 'Status'),
-    cell: ({ row }) => {
-      const endDate: string = row.getValue('end');
-      return h('div', { class: 'text-center' }, endDate ? 'Ended' : 'In progress');
-    }
+    cell: ({ row }) => h('div', { class: 'text-center' }, row.getValue('status')),
   },
   {
     accessorKey: 'elapsed',
@@ -164,7 +161,7 @@ async function submit () {
           <CardTitle>Previous sessions</CardTitle>
         </CardHeader>
         <Separator />
-        <CardContent class="flex flex-col gap-5 p-0">
+        <CardContent class="p-0">
           <DataTable :columns="tableColumns" :data="history" />
         </CardContent>
       </Card>
