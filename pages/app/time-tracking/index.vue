@@ -26,6 +26,7 @@ import PageHeader from "~/components/layout/app/page/pageHeader.vue";
 import PageContent from "~/components/layout/app/page/pageContent.vue";
 import type {IWorkSession} from "~/types/timeTracking/IWorkSession";
 import {useWorkHistory} from "~/composables/useTimeTracking";
+import {startSession} from "~/composables/useTimeTracking";
 import { h } from "vue";
 import type {ColumnDef} from "@tanstack/vue-table";
 import DataTableAction from "~/components/locals/time-tracking/DataTableAction.vue";
@@ -42,9 +43,6 @@ useHead({
 const user = useState<IUser>('user').value;
 const length = ref<number>(3);
 const premium = computed((): boolean => user?.premium || length.value < 4);
-
-const sessionName = ref<string | undefined>();
-const canSubmit = computed((): boolean => /^[\w ._|\-!?,;:=&@é"'(§èçà)òùñ]{4,}$/g.test(sessionName.value ?? ''));
 
 const donutValueFormatter = (tick: number) => new Intl.NumberFormat('en-US', {
   style: 'unit',
@@ -73,17 +71,34 @@ const tableColumns: ColumnDef<IWorkSession>[] = [
         style: 'unit',
         unit: 'hour',
       }).format(elapsed);
-      return h('div', { class: 'text-right font-medium' }, formatted);
+      return h('div', {class: 'text-right font-medium' }, formatted);
     }
   },
   {
     id: 'actions',
     enableHiding: false,
-    cell: ({ row }) => h('div', { class: 'relative text-right' }, h(DataTableAction, { session: row.original }))
-  }
+    cell: ({ row }) => h('div', { class: 'relative text-right' }, h(DataTableAction, {
+      session: row.original,
+      onSessionRenamed: (session: IWorkSession) => {
+        const index = history.value.findIndex(s => s.uid === session.uid);
+        if (index === -1) return;
+        const nh = [...history.value];
+        nh[index].name = session.name;
+        history.value = [...nh];
+      },
+      onSessionDeleted: (session: IWorkSession) => {
+        const index = history.value.findIndex(s => s.uid === session.uid);
+        if (index === -1) return;
+        const v = [...history.value];
+        v.splice(index, 1);
+        history.value = [...v];
+      }
+    }))
+  },
 ];
 
-
+const sessionName = ref<string | undefined>();
+const canSubmit = computed((): boolean => /^[\w ._|\-!?,;:=&@é"'(§èçà)òùñ]{4,}$/g.test(sessionName.value ?? ''));
 async function submit () {
   if (!sessionName.value) return;
   await startSession(sessionName.value);
@@ -147,26 +162,26 @@ async function submit () {
         </CardContent>
       </Card>
 
-      <Card class="col-start-1">
+      <Card class="col-start-1 overflow-y-auto">
         <CardHeader>
           <CardTitle>Active sessions</CardTitle>
         </CardHeader>
         <Separator />
         <CardContent class="p-0" v-if="activeSessions.length">
-          <DataTable :columns="tableColumns" :data="activeSessions" />
+          <DataTable :columns="tableColumns" :data="activeSessions" keyName="uid" />
         </CardContent>
         <CardContent class="page--no-content" v-else>
           No active sessions...
         </CardContent>
       </Card>
 
-      <Card class="col-start-2 col-span-2 row-start-1 row-span-2">
+      <Card class="col-start-2 col-span-2 row-start-1 row-span-2 overflow-y-auto">
         <CardHeader>
           <CardTitle>Previous sessions</CardTitle>
         </CardHeader>
         <Separator />
         <CardContent class="p-0">
-          <DataTable :columns="tableColumns" :data="history" />
+          <DataTable :columns="tableColumns" :data="history" keyName="uid" />
         </CardContent>
       </Card>
     </PageContent>
