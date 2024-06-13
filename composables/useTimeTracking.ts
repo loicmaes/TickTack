@@ -73,3 +73,28 @@ export async function renameWorkSession (uid: string, newName: string): Promise<
 
   return null;
 }
+export async function deleteWorkSession (uid: string): Promise<IWorkSession | null> {
+  const {toast} = useToast();
+
+  try {
+    const res = await $fetch<IWorkSession>('/api/features/timeTracking/deleteSession', {
+      headers: useRequestHeaders(),
+      method: 'DELETE',
+      body: {
+        uid
+      }
+    });
+    toast({
+      title: 'Well done 👏',
+      description: `${res.name} is gone and it won't appear again! Keep working, practice makes perfect.`,
+    });
+    return res;
+  } catch (e) {
+    toast({
+      title: "Oops 💢",
+      description: `Something went wrong while deleting your session...`,
+      variant: 'destructive'
+    });
+  }
+  return null;
+}

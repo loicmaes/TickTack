@@ -7,12 +7,14 @@ import {
     DropdownMenuTrigger,
     DropdownMenuItem,
     Button,
-    Separator
+    Separator,
 } from "#components";
 import { MoreHoriz, Trash, Edit, SecurityPass, Play, Pause, Eye } from "@iconoir/vue";
 import type {IWorkSession} from "~/types/timeTracking/IWorkSession";
 import type {IWorkSessionStep} from "~/types/timeTracking/IWorkSessionStep";
 import RenameDialog from "~/components/locals/time-tracking/RenameDialog.vue";
+import DeleteAlert from "~/components/locals/time-tracking/DeleteAlert.vue";
+
 defineEmits(['session-renamed', 'session-deleted']);
 
 const { session } = defineProps<{
@@ -21,7 +23,9 @@ const { session } = defineProps<{
 const { uid, end, steps, status } = session;
 const ended: boolean = status === 'Ended';
 const lastStep: IWorkSessionStep | undefined = (steps as IWorkSessionStep[]).findLast(step => step.status === 'In Progress');
+
 const isRenaming = ref<boolean>(false);
+const isDeleting = ref<boolean>(false);
 </script>
 
 <template>
@@ -60,13 +64,15 @@ const isRenaming = ref<boolean>(false);
           <Edit class="item--icon" />
           <span>Rename</span>
         </DropdownMenuItem>
-        <DropdownMenuItem class="item">
+        <DropdownMenuItem class="item" @click.stop="isDeleting = true">
           <Trash class="item--icon" />
           <span>Delete</span>
         </DropdownMenuItem>
       </DropdownMenuGroup>
     </DropdownMenuContent>
   </DropdownMenu>
+
+  <DeleteAlert :deleting="isDeleting" :session="session" @deleted="$emit('session-deleted', $event)" @state-updated="isDeleting = $event" />
   <RenameDialog :renaming="isRenaming" :session="session" @renamed="$emit('session-renamed', $event)" @state-change="isRenaming = $event" />
 </template>
 

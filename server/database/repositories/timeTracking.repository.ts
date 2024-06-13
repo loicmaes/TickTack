@@ -66,9 +66,15 @@ export async function recoverWorkSession (uid: string): Promise<IWorkSession | n
     })) : []
   };
 }
-export async function deleteWorkSession (uid: string) {} // TODO
-export async function terminateWorkSession (uid: string) {} // TODO
-export async function nextStepWorkSession (uid: string) {} // TODO
+export async function deleteWorkSession (uid: string) {
+  const deleted = await recoverWorkSession(uid);
+  await prisma.workSession.delete({
+    where: {
+      uid,
+    }
+  });
+  return deleted;
+}
 export async function updateWorkSession (uid: string, payload: Partial<IWorkSession>) {
   const dataPayload = {
     name: payload.name,
