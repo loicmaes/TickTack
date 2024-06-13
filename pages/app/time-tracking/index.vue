@@ -125,7 +125,6 @@ async function submit () {
             <div class="w-full my-8">
               <Label for="name">Name</Label>
               <Input class="mt-2" id="name" v-model="sessionName" placeholder="Type something..." />
-              {{ sessionName }}
             </div>
 
             <SheetFooter>
@@ -167,11 +166,8 @@ async function submit () {
           <CardTitle>Active sessions</CardTitle>
         </CardHeader>
         <Separator />
-        <CardContent class="p-0" v-if="activeSessions.length">
+        <CardContent class="p-0">
           <DataTable :columns="tableColumns" :data="activeSessions" keyName="uid" />
-        </CardContent>
-        <CardContent class="page--no-content" v-else>
-          No active sessions...
         </CardContent>
       </Card>
 
