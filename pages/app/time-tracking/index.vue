@@ -52,6 +52,7 @@ const donutValueFormatter = (tick: number) => new Intl.NumberFormat('en-US', {
 }).format(tick);
 
 const history = ref<IWorkSession[]>(await useWorkHistory());
+const activeSessions = computed(() => history.value ? history.value.filter((session: IWorkSession) => session.status === 'In Progress') : []);
 const tableColumns: ColumnDef<IWorkSession>[] = [
   {
     accessorKey: 'name',
@@ -151,7 +152,10 @@ async function submit () {
           <CardTitle>Active sessions</CardTitle>
         </CardHeader>
         <Separator />
-        <CardContent class="page--no-content">
+        <CardContent class="p-0" v-if="activeSessions.length">
+          <DataTable :columns="tableColumns" :data="activeSessions" />
+        </CardContent>
+        <CardContent class="page--no-content" v-else>
           No active sessions...
         </CardContent>
       </Card>
