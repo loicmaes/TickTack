@@ -41,8 +41,6 @@ useHead({
 });
 
 const user = useState<IUser>('user').value;
-const length = ref<number>(3);
-const premium = computed((): boolean => user?.premium || length.value < 4);
 
 const donutValueFormatter = (tick: number) => new Intl.NumberFormat('en-US', {
   style: 'unit',
@@ -50,6 +48,7 @@ const donutValueFormatter = (tick: number) => new Intl.NumberFormat('en-US', {
 }).format(tick);
 
 const history = ref<IWorkSession[]>(await useWorkHistory());
+const isPremium = computed((): boolean => user?.premium || (history.value ?? []).length < 4);
 const activeSessions = computed(() => history.value ? history.value.filter((session: IWorkSession) => session.status === 'In Progress') : []);
 const tableColumns: ColumnDef<IWorkSession>[] = [
   {
@@ -107,7 +106,7 @@ async function submit () {
 
 <template>
   <main data-page="timeTracking" class="page timeTracking">
-    <PageHeader name="Time Track" has-premium-feature :premium="premium">
+    <PageHeader name="Time Track" has-premium-feature :premium="isPremium" :key="`page-actions-${history.length}`">
       <template #actions>
         <Sheet>
           <SheetTrigger as-child>
