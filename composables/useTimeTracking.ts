@@ -2,6 +2,7 @@ import type {IUser} from "~/types/IUser";
 import {useToast} from "~/components/ui/toast";
 import type {IWorkSession} from "~/types/timeTracking/IWorkSession";
 import {useRequestHeaders} from "#imports";
+import type {IWorkSessionStep} from "~/types/timeTracking/IWorkSessionStep";
 
 export async function startSession (name: string): Promise<void> {
   const userUid = useState<IUser>('user').value.uid;
@@ -97,4 +98,38 @@ export async function deleteWorkSession (uid: string): Promise<IWorkSession | nu
     });
   }
   return null;
+}
+
+export async function useLastStep (uid: string): Promise<IWorkSessionStep | null> {
+  const { toast } = useToast();
+
+  try {
+    return await $fetch(`/api/features/timeTracking/session/recoverLastStep/${uid}`);
+  } catch (e) {
+    toast({
+      title: "Oops 💢",
+      description: "Something went wrong while stopping your session... Try again!",
+      variant: "destructive",
+    });
+    return null;
+  }
+}
+export async function stopWorkSession (uid: string): Promise<IWorkSession | null> {
+  const { toast } = useToast();
+
+  try {
+    return await $fetch('/api/features/timeTracking/session/stop', {
+      method: "POST",
+      body: {
+        uid,
+      }
+    })
+  } catch (e) {
+    toast({
+      title: "Oops 💢",
+      description: "Something went wrong while stopping your session... Try again!",
+      variant: "destructive",
+    });
+    return null;
+  }
 }
