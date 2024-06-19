@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "postgresql"
+  url      = env("DB_URL")
 }
 
 model User {
@@ -16,8 +16,9 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  sessions Session[]
-  sw_runs  StopWatchRun[]
+  sessions     Session[]
+  sw_runs      StopWatchRun[]
+  workSessions WorkSession[]
 
   @@map("users")
 }
@@ -59,4 +60,39 @@ model StopWatchBreak {
   run StopWatchRun @relation(fields: [runId], references: [id], onDelete: Cascade)
 
   @@map("sw_breaks")
+}
+
+enum WorkSessionStepType {
+  break
+  working
+}
+
+model WorkSession {
+  uid     String    @id
+  userUid String
+  name    String
+  start   DateTime  @default(now())
+  end     DateTime?
+  elapsed Float     @default(0)
+
+  user User @relation(fields: [userUid], references: [uid], onDelete: Cascade)
+
+  steps WorkSessionStep[]
+
+  @@unique([userUid, name])
+  @@map("work_sessions")
+}
+
+model WorkSessionStep {
+  id         Int                 @id @default(autoincrement())
+  sessionUid String
+  start      DateTime
+  end        DateTime?
+  elapsed    Float               @default(0)
+  stepType   WorkSessionStepType @default(working)
+  comment    String?
+
+  session WorkSession @relation(fields: [sessionUid], references: [uid], onDelete: Cascade)
+
+  @@map("work_session_steps")
 }

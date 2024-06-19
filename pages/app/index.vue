@@ -21,7 +21,7 @@ const user = useState<IUser>('user').value;
 
 <template>
   <div class="flex flex-col gap-3 items-start">
-    <p>Hello {{ user.firstName }} {{ user.lastName }}</p>
+    <p>Hello {{ user?.firstName }} {{ user?.lastName }}</p>
   </div>
 </template>
 

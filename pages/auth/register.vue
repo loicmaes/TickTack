@@ -74,7 +74,7 @@ const onSubmit = handleSubmit(async ({ firstName, lastName, email, password }) =
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input v-bind="componentField" placeholder="Ex: ••••••••••••••" />
+                <Input type="password" v-bind="componentField" placeholder="Ex: ••••••••••••••" />
               </FormControl>
             </FormItem>
           </FormField>

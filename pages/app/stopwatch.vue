@@ -13,6 +13,7 @@ import {saveRunCopy, useStopwatchHistory} from "~/composables/useStopWatch";
 import type {IRun} from "~/types/stopwatch/IRun";
 import type {IUser} from "~/types/IUser";
 import {useState} from "#imports";
+import PageContent from "~/components/layout/app/page/pageContent.vue";
 
 await useStrictProtectedAccess(true);
 
@@ -124,7 +125,7 @@ async function saveACopy () {
       </template>
     </PageHeader>
 
-    <div class="page--renderer stopwatch--grid">
+    <PageContent grid="top-first">
       <Card class="stopwatch__head">
         <CardContent class="stopwatch__head--head">
           <p class="stopwatch__head--counter">
@@ -203,10 +204,8 @@ async function saveACopy () {
             </li>
           </ul>
         </CardContent>
-        <CardContent class="no-content" v-else>
-          <div>
-            No breaks for now...
-          </div>
+        <CardContent class="page--no-content" v-else>
+          No breaks for now...
         </CardContent>
       </Card>
 
@@ -218,11 +217,11 @@ async function saveACopy () {
         <CardContent class="stopwatch__history--container" v-if="history.length">
           <div :key="`sw-history-${run.id}`" v-for="run in history">{{ run.label ?? `Unnamed ${run.id}` }}</div>
         </CardContent>
-        <CardContent class="no-content" v-else>
+        <CardContent class="page--no-content" v-else>
           No runs saved for now...
         </CardContent>
       </Card>
-    </div>
+    </PageContent>
   </main>
 </template>
 
@@ -231,9 +230,6 @@ async function saveACopy () {
 
 .stopwatch
   @apply h-full
-
-  &--grid
-    @apply grid grid-rows-[auto_1fr] grid-cols-3 gap-6
 
   &__head
     @apply pt-12 pb-6 col-span-3
@@ -267,7 +263,4 @@ async function saveACopy () {
 
     &--container
       @apply py-6 overflow-y-auto
-
-.no-content
-  @apply py-6 text-stone-300 dark:text-stone-700
 </style>

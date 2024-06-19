@@ -4,6 +4,9 @@ import SideBarLabel from "~/components/layout/app/sideBarLabel.vue";
 import SideBarLink from "~/components/layout/app/sideBarLink.vue";
 import Logo from "~/components/logo.vue";
 import SideBarUser from "~/components/layout/app/sideBarUser.vue";
+import type {IUser} from "~/types/IUser";
+
+const user = useState<IUser>('user').value;
 </script>
 
 <template>
@@ -21,7 +24,7 @@ import SideBarUser from "~/components/layout/app/sideBarUser.vue";
           <template #icon><ListSelect data-section-item-icon /></template>
           <template #content>Today task</template>
         </SideBarLink>
-        <SideBarLink data-section-item>
+        <SideBarLink data-section-item to="/app/time-tracking">
           <template #icon><GraphUp data-section-item-icon /></template>
           <template #content>Time track</template>
         </SideBarLink>
@@ -50,7 +53,7 @@ import SideBarUser from "~/components/layout/app/sideBarUser.vue";
     </div>
 
     <footer class="sidebar__foot">
-      <SideBarUser />
+      <SideBarUser v-if="user" />
     </footer>
   </aside>
 </template>
