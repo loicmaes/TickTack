@@ -1,5 +1,5 @@
 import type {IUser} from "~/types/IUser";
-import {useState, useCookie} from "#imports";
+import {useState, useCookie, navigateTo} from "#imports";
 import {useToast} from "~/components/ui/toast";
 import {FetchError} from "ofetch";
 
@@ -18,6 +18,11 @@ export async function useUser (): Promise<IUser | null> {
   }
 
   return user.value;
+}
+export async function useStrictProtectedAccess (shouldBeAuthenticated?: boolean) {
+  const user = useState<IUser>('user').value;
+  if (shouldBeAuthenticated && !user) return navigateTo('/auth/login');
+  if (!shouldBeAuthenticated && user) return navigateTo('/app');
 }
 
 export async function registerWithEmail (

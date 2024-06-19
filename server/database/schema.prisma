@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "postgresql"
+  url      = env("DB_URL")
 }
 
 model User {
@@ -16,7 +16,9 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  sessions Session[]
+  sessions     Session[]
+  sw_runs      StopWatchRun[]
+  workSessions WorkSession[]
 
   @@map("users")
 }
@@ -29,8 +31,68 @@ model Session {
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
-  user User @relation(fields: [userUid], references: [uid])
+  user User @relation(fields: [userUid], references: [uid], onDelete: Cascade)
 
   @@unique([userUid, authToken])
   @@map("sessions")
+}
+
+model StopWatchRun {
+  id          Int      @id @default(autoincrement())
+  userUid     String
+  startedAt   DateTime
+  timeElapsed Float
+  label       String?
+
+  user   User             @relation(fields: [userUid], references: [uid], onDelete: Cascade)
+  breaks StopWatchBreak[]
+
+  @@map("sw_runs")
+}
+
+model StopWatchBreak {
+  id                  Int     @id @default(autoincrement())
+  runId               Int
+  label               String?
+  relativeTimeElapsed Float
+  absoluteTimeElapsed Float
+
+  run StopWatchRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+
+  @@map("sw_breaks")
+}
+
+enum WorkSessionStepType {
+  break
+  working
+}
+
+model WorkSession {
+  uid     String    @id
+  userUid String
+  name    String
+  start   DateTime  @default(now())
+  end     DateTime?
+  elapsed Float     @default(0)
+
+  user User @relation(fields: [userUid], references: [uid], onDelete: Cascade)
+
+  steps WorkSessionStep[]
+
+  @@unique([userUid, name])
+  @@map("work_sessions")
+}
+
+model WorkSessionStep {
+  id         Int                 @id @default(autoincrement())
+  sessionUid String
+  start      DateTime
+  end        DateTime?
+  elapsed    Float               @default(0)
+  stepType   WorkSessionStepType @default(working)
+  comment    String?
+
+  session WorkSession @relation(fields: [sessionUid], references: [uid], onDelete: Cascade)
+
+  @@map("work_session_steps")
 }
